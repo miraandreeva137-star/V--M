@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Виктория & Максим — Свадьба</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0a0a0a',
+                        cardDark: '#121212',
+                        borderDark: '#262626',
+                        goldSubtle: '#d4af37',
+                    },
+                    fontFamily: {
+                        serif: ['Cormorant Garamond', 'serif'],
+                        sans: ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom aesthetics matching stage flare & B&W bokeh */
+        body {
+            background-color: #0a0a0a;
+            color: #e5e5e5;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism nav */
+        .glass-nav {
+            background: rgba(10, 10, 10, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Bokeh light flares overlay */
+        .flare-bg {
+            background-image: 
+                radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 20% 70%, rgba(200, 200, 200, 0.05) 0%, transparent 35%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.07) 0%, transparent 30%);
+        }
+
+        /* Image grayscale filter & hover glow */
+        .bw-img {
+            filter: grayscale(100%) contrast(110%);
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .bw-img:hover {
+            filter: grayscale(80%) contrast(115%);
+            transform: scale(1.03);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Ambient glowing point */
+        .light-beam {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 1200px;
+            height: 600px;
+            background: radial-gradient(ellipse at top, rgba(255, 255, 255, 0.15) 0%, rgba(10, 10, 10, 0) 70%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .border-glow {
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: border-color 0.4s ease;
+        }
+        .border-glow:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body class="selection:bg-white selection:text-black">
+
+    <!-- Ambient Light Flare Top -->
+    <div class="light-beam"></div>
+
+    <!-- Navigation Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="font-serif text-2xl tracking-widest text-white uppercase hover:opacity-80 transition">V & M</a>
+            
+            <nav class="hidden md:flex space-x-8 text-xs tracking-[0.2em] uppercase font-light text-neutral-300">
+                <a href="#about" class="hover:text-white transition">История</a>
+                <a href="#schedule" class="hover:text-white transition">Программа</a>
+                <a href="#details" class="hover:text-white transition">Детали & Дресс-код</a>
+                <a href="#gallery" class="hover:text-white transition">Галерея</a>
+                <a href="#rsvp" class="hover:text-white transition">RSVP</a>
+            </nav>
+
+            <a href="#rsvp" class="hidden sm:inline-block text-xs uppercase tracking-widest px-5 py-2.5 border border-white/30 text-white hover:bg-white hover:text-black transition duration-300">
+                Подтвердить
+            </a>
+
+            <!-- Mobile Menu Toggle -->
+            <button id="mobile-menu-btn" class="md:hidden text-white focus:outline-none" aria-label="Toggle Navigation">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation Drawer -->
+        <div id="mobile-menu" class="hidden md:hidden bg-dark/95 border-b border-neutral-800 px-6 py-6 transition-all">
+            <div class="flex flex-col space-y-4 text-center font-serif text-lg tracking-widest uppercase text-neutral-300">
+                <a href="#about" class="mobile-link py-2 border-b border-neutral-900">История</a>
+                <a href="#schedule" class="mobile-link py-2 border-b border-neutral-900">Программа</a>
+                <a href="#details" class="mobile-link py-2 border-b border-neutral-900">Детали & Дресс-код</a>
+                <a href="#gallery" class="mobile-link py-2 border-b border-neutral-900">Галерея</a>
+                <a href="#rsvp" class="mobile-link py-2 text-white">Подтвердить حضور (RSVP)</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative min-h-screen flex items-center justify-center pt-24 pb-16 px-6 flare-bg">
+        <div class="max-w-4xl text-center z-10 flex flex-col items-center">
+            
+            <p class="text-xs md:text-sm tracking-[0.4em] uppercase text-neutral-400 mb-6 animate-fade-in">
+                Приглашение на свадьбу
+            </p>
+            
+            <h1 class="font-serif text-5xl sm:text-7xl lg:text-9xl font-light text-white tracking-tight mb-4 leading-none">
+                Виктория <span class="font-serif italic font-normal text-neutral-400">&amp;</span> Максим
+            </h1>
+            
+            <p class="font-serif italic text-lg sm:text-2xl text-neutral-300 mb-10 max-w-xl font-light">
+                «Союз двух сердец под сиянием тысячи огней»
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center gap-4 text-sm tracking-widest uppercase mb-14 text-neutral-300">
+                <span class="px-4 py-1 border-y border-white/20">18 ИЮЛЯ 2026</span>
+                <span class="hidden sm:inline text-neutral-600">•</span>
+                <span class="px-4 py-1 border-y border-white/20">САНКТ-ПЕТЕРБУРГ</span>
+            </div>
+
+            <!-- Countdown Timer -->
+            <div class="grid grid-cols-4 gap-4 sm:gap-8 max-w-lg w-full mb-16 text-center">
+                <div class="bg-cardDark/80 p-3 sm:p-4 rounded-sm border border-neutral-800">
+                    <span id="days" class="block font-serif text-2xl sm:text-4xl text-white font-light">00</span>
+                    <span class="text-[10px] sm:text-xs uppercase tracking-widest text-neutral-500">Дней</span>
+                </div>
+                <div class="bg-cardDark/80 p-3 sm:p-4 rounded-sm border border-neutral-800">
+                    <span id="hours" class="block font-serif text-2xl sm:text-4xl text-white font-light">00</span>
+                    <span class="text-[10px] sm:text-xs uppercase tracking-widest text-neutral-500">Часов</span>
+                </div>
+                <div class="bg-cardDark/80 p-3 sm:p-4 rounded-sm border border-neutral-800">
+                    <span id="minutes" class="block font-serif text-2xl sm:text-4xl text-white font-light">00</span>
+                    <span class="text-[10px] sm:text-xs uppercase tracking-widest text-neutral-500">Минут</span>
+                </div>
+                <div class="bg-cardDark/80 p-3 sm:p-4 rounded-sm border border-neutral-800">
+                    <span id="seconds" class="block font-serif text-2xl sm:text-4xl text-white font-light">00</span>
+                    <span class="text-[10px] sm:text-xs uppercase tracking-widest text-neutral-500">Секунд</span>
+                </div>
+            </div>
+
+            <!-- Scroll Indicator Button -->
+            <a href="#about" class="group flex flex-col items-center gap-2 text-neutral-400 hover:text-white transition">
+                <span class="text-[10px] tracking-[0.3em] uppercase">Прокрутите вниз</span>
+                <i class="fa-solid fa-chevron-down text-xs animate-bounce group-hover:text-white"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- OUR STORY SECTION -->
+    <section id="about" class="py-24 px-6 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <!-- Left Image (Aesthetic Photo Frame) -->
+            <div class="lg:col-span-6 relative">
+                <div class="relative overflow-hidden rounded-sm border border-neutral-800 bg-neutral-900 shadow-2xl">
+                    <!-- Photo capturing the mood of the provided dark B&W wedding image -->
+                    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80" 
+                         alt="Виктория и Максим" 
+                         class="w-full h-[550px] object-cover bw-img">
+                    
+                    <!-- Dark Gradient Overlay -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
+                    
+                    <div class="absolute bottom-6 left-6 right-6 text-center">
+                        <p class="font-serif italic text-lg text-neutral-300">«Любовь — это когда весь мир вокруг умолкает»</p>
+                    </div>
+                </div>
+                <!-- Decorative Corner Accent -->
+                <div class="absolute -bottom-4 -right-4 w-24 h-24 border-r-2 border-b-2 border-white/20 pointer-events-none hidden sm:block"></div>
+            </div>
+
+            <!-- Right Content -->
+            <div class="lg:col-span-6 space-y-6 lg:pl-8">
+                <div class="inline-block border-b border-white/20 pb-1">
+                    <span class="text-xs uppercase tracking-[0.3em] text-neutral-400">Наша история</span>
+                </div>
+                
+                <h2 class="font-serif text-4xl sm:text-5xl text-white font-light leading-tight">
+                    Каждая деталь имеет значение, каждый момент вечен
+                </h2>
+                
+                <p class="text-neutral-400 text-sm leading-relaxed font-light">
+                    Мы рады пригласить вас разделить с нами самый важный и долгожданный день нашей жизни. Наш праздник создается в атмосфере вечерней элегантности, глубоких контрастов, софитов и живой музыки.
+                </p>
+                
+                <p class="text-neutral-400 text-sm leading-relaxed font-light">
+                    Ваше присутствие и ваша поддержка — самый ценный подарок для нас. Приготовьтесь к вечеру, наполненному искренними эмоциями, танцами и неповторимой атмосферой.
+                </p>
+
+                <div class="pt-4 grid grid-cols-2 gap-6 border-t border-neutral-800 text-neutral-300">
+                    <div>
+                        <h4 class="font-serif text-2xl text-white">18.07.2026</h4>
+                        <p class="text-xs text-neutral-500 uppercase tracking-widest mt-1">Дата торжества</p>
+                    </div>
+                    <div>
+                        <h4 class="font-serif text-2xl text-white">Black Tie</h4>
+                        <p class="text-xs text-neutral-500 uppercase tracking-widest mt-1">Дресс-код</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SCHEDULE / TIMELINE SECTION -->
+    <section id="schedule" class="py-24 px-6 bg-cardDark/40 border-y border-neutral-900">
+        <div class="max-w-4xl mx-auto">
+            
+            <div class="text-center mb-16">
+                <span class="text-xs uppercase tracking-[0.3em] text-neutral-400">Тайминг дня</span>
+                <h2 class="font-serif text-4xl sm:text-5xl text-white font-light mt-2">Программа вечера</h2>
+                <div class="w-12 h-px bg-white/30 mx-auto mt-4"></div>
+            </div>
+
+            <!-- Timeline list -->
+            <div class="relative border-l border-neutral-800 ml-4 sm:ml-32 space-y-12">
+                
+                <!-- Timeline item 1 -->
+                <div class="relative pl-8 sm:pl-10 group">
+                    <!-- Point dot -->
+                    <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-white group-hover:scale-150 transition-transform"></div>
+                    <span class="sm:absolute sm:-left-32 sm:top-0 font-serif text-xl text-neutral-400 mb-1 sm:mb-0 block">16:30</span>
+                    <div class="bg-cardDark p-6 rounded-sm border border-neutral-800 border-glow">
+                        <div class="flex items-center gap-3 mb-2">
+                            <i class="fa-solid fa-glass-cheers text-neutral-400 text-sm"></i>
+                            <h3 class="font-serif text-2xl text-white">Сбор гостей & Welcome Cocktail</h3>
+                        </div>
+                        <p class="text-xs text-neutral-400 font-light leading-relaxed">
+                            Живая джазовая музыка, легкие закуски и авторские коктейли. Время для знакомства и первых фото.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Timeline item 2 -->
+                <div class="relative pl-8 sm:pl-10 group">
+                    <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-white group-hover:scale-150 transition-transform"></div>
+                    <span class="sm:absolute sm:-left-32 sm:top-0 font-serif text-xl text-neutral-400 mb-1 sm:mb-0 block">17:30</span>
+                    <div class="bg-cardDark p-6 rounded-sm border border-neutral-800 border-glow">
+                        <div class="flex items-center gap-3 mb-2">
+                            <i class="fa-solid fa-ring text-neutral-400 text-sm"></i>
+                            <h3 class="font-serif text-2xl text-white">Торжественная церемония</h3>
+                        </div>
+                        <p class="text-xs text-neutral-400 font-light leading-relaxed">
+                            Главный момент дня — обмен клятвами при свете софитов и свечей.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Timeline item 3 -->
+                <div class="relative pl-8 sm:pl-10 group">
+                    <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-white group-hover:scale-150 transition-transform"></div>
+                    <span class="sm:absolute sm:-left-32 sm:top-0 font-serif text-xl text-neutral-400 mb-1 sm:mb-0 block">19:00</span>
+                    <div class="bg-cardDark p-6 rounded-sm border border-neutral-800 border-glow">
+                        <div class="flex items-center gap-3 mb-2">
+                            <i class="fa-solid fa-utensils text-neutral-400 text-sm"></i>
+                            <h3 class="font-serif text-2xl text-white">Гала-ужин & Шоу-программа</h3>
+                        </div>
+                        <p class="text-xs text-neutral-400 font-light leading-relaxed">
+                            Авторская кухня, праздничные тосты, выступления артистов и много теплых слов.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Timeline item 4 -->
+                <div class="relative pl-8 sm:pl-10 group">
+                    <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-white group-hover:scale-150 transition-transform"></div>
+                    <span class="sm:absolute sm:-left-32 sm:top-0 font-serif text-xl text-neutral-400 mb-1 sm:mb-0 block">21:30</span>
+                    <div class="bg-cardDark p-6 rounded-sm border border-neutral-800 border-glow">
+                        <div class="flex items-center gap-3 mb-2">
+                            <i class="fa-solid fa-cake-candles text-neutral-400 text-sm"></i>
+                            <h3 class="font-serif text-2xl text-white">Свадебный торт & Первый танец</h3>
+                        </div>
+                        <p class="text-xs text-neutral-400 font-light leading-relaxed">
+                            Разрезание торта и романтический танец жениха и невесты под световое шоу.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Timeline item 5 -->
+                <div class="relative pl-8 sm:pl-10 group">
+                    <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-white group-hover:scale-150 transition-transform"></div>
+                    <span class="sm:absolute sm:-left-32 sm:top-0 font-serif text-xl text-neutral-400 mb-1 sm:mb-0 block">22:30</span>
+                    <div class="bg-cardDark p-6 rounded-sm border border-neutral-800 border-glow">
+                        <div class="flex items-center gap-3 mb-2">
+                            <i class="fa-solid fa-music text-neutral-400 text-sm"></i>
+                            <h3 class="font-serif text-2xl text-white">Afterparty & DJ Set</h3>
+                        </div>
+                        <p class="text-xs text-neutral-400 font-light leading-relaxed">
+                            Танцы до полуночи, специальный сет от DJ и дымовые визуальные эффекты.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- VENUE & DRESS CODE SECTION -->
+    <section id="details" class="py-24 px-6 max-w-7xl mx-auto">
+        
+        <div class="text-center mb-16">
+            <span class="text-xs uppercase tracking-[0.3em] text-neutral-400">Локация & Стиль</span>
+            <h2 class="font-serif text-4xl sm:text-5xl text-white font-light mt-2">Детали торжества</h2>
+            <div class="w-12 h-px bg-white/30 mx-auto mt-4"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- Venue Card -->
+            <div class="bg-cardDark p-8 rounded-sm border border-neutral-800 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-xs uppercase tracking-widest text-neutral-500">Место проведения</span>
+                        <i class="fa-solid fa-location-dot text-white text-xl"></i>
+                    </div>
+                    <h3 class="font-serif text-3xl text-white mb-2">Grand Crystal Hall</h3>
+                    <p class="text-neutral-400 text-sm font-light mb-6">Санкт-Петербург, Набережная реки Мойки, 42</p>
+                    <p class="text-neutral-400 text-xs leading-relaxed font-light mb-6">
+                        Зал выполнен в строгом современном стиле с высокими потолками, профессиональным концертным светом и панорамными видами. Для гостей предусмотрена охраняемая парковка.
+                    </p>
+                </div>
+                
+                <div class="pt-6 border-t border-neutral-800 flex justify-between items-center">
+                    <span class="text-xs text-neutral-500 uppercase">Начало сборa: 16:30</span>
+                    <a href="https://maps.google.com" target="_blank" rel="noopener" class="text-xs uppercase tracking-widest text-white border-b border-white pb-0.5 hover:opacity-70 transition">
+                        Открыть на карте <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Dress Code Card -->
+            <div class="bg-cardDark p-8 rounded-sm border border-neutral-800 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-xs uppercase tracking-widest text-neutral-500">Дресс-код</span>
+                        <i class="fa-solid fa-user-tie text-white text-xl"></i>
+                    </div>
+                    <h3 class="font-serif text-3xl text-white mb-2">Black Tie / Black & White</h3>
+                    <p class="text-neutral-400 text-sm font-light mb-6">Строгий вечерний монохром</p>
+                    
+                    <!-- Color Swatches -->
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="text-xs text-neutral-400 font-light">Палитра:</span>
+                        <div class="w-6 h-6 rounded-full bg-black border border-neutral-600" title="Черный"></div>
+                        <div class="w-6 h-6 rounded-full bg-neutral-900 border border-neutral-700" title="Темно-серый"></div>
+                        <div class="w-6 h-6 rounded-full bg-white border border-neutral-300" title="Белый"></div>
+                    </div>
+
+                    <p class="text-neutral-400 text-xs leading-relaxed font-light">
+                        Будем признательны, если вы поддержите концепцию вечера: классические смокинги или темные костюмы для мужчин, вечерние или коктейльные платья в черных, белых или монохромных тонах для дам.
+                    </p>
+                </div>
+
+                <div class="pt-6 border-t border-neutral-800">
+                    <p class="text-xs text-neutral-500">Пожалуйста, воздержитесь от ярких цветных нарядов.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- PHOTO GALLERY PREVIEW SECTION -->
+    <section id="gallery" class="py-24 px-6 bg-cardDark/20 border-t border-neutral-900">
+        <div class="max-w-7xl mx-auto">
+            
+            <div class="text-center mb-16">
+                <span class="text-xs uppercase tracking-[0.3em] text-neutral-400">Атмосфера</span>
+                <h2 class="font-serif text-4xl sm:text-5xl text-white font-light mt-2">Вдохновение вечера</h2>
+                <div class="w-12 h-px bg-white/30 mx-auto mt-4"></div>
+            </div>
+
+            <!-- Photo Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="overflow-hidden rounded-sm border border-neutral-800 bg-neutral-900">
+                    <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80" alt="Атмосфера 1" class="w-full h-80 object-cover bw-img">
+                </div>
+                <div class="overflow-hidden rounded-sm border border-neutral-800 bg-neutral-900">
+                    <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=800&q=80" alt="Атмосфера 2" class="w-full h-80 object-cover bw-img">
+                </div>
+                <div class="overflow-hidden rounded-sm border border-neutral-800 bg-neutral-900">
+                    <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80" alt="Атмосфера 3" class="w-full h-80 object-cover bw-img">
+                </div>
+                <div class="overflow-hidden rounded-sm border border-neutral-800 bg-neutral-900">
+                    <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=800&q=80" alt="Атмосфера 4" class="w-full h-80 object-cover bw-img">
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- MUSIC PLAYLIST REQUEST -->
+    <section class="py-16 px-6 max-w-4xl mx-auto border-t border-neutral-900">
+        <div class="bg-cardDark p-8 rounded-sm border border-neutral-800 text-center relative overflow-hidden">
+            <i class="fa-solid fa-compact-disc text-5xl text-neutral-800 absolute -right-6 -bottom-6 pointer-events-none"></i>
+            
+            <h3 class="font-serif text-3xl text-white font-light mb-3">Любимый трек на дискотеку</h3>
+            <p class="text-xs text-neutral-400 font-light max-w-md mx-auto mb-6">
+                Предложите песню, под которую вы точно выйдете на танцпол, и мы добавим её в плейлист вечера!
+            </p>
+
+            <form id="song-form" class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                <input type="text" id="song-input" required placeholder="Исполнитель и название трека" class="flex-1 bg-dark border border-neutral-700 px-4 py-3 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-white rounded-sm">
+                <button type="submit" class="bg-white text-black text-xs uppercase tracking-widest px-6 py-3 font-medium hover:bg-neutral-200 transition">
+                    Отправить
+                </button>
+            </form>
+            <p id="song-success" class="hidden text-xs text-emerald-400 mt-3">Спасибо! Мы добавили ваш трек в список DJ.</p>
+        </div>
+    </section>
+
+    <!-- RSVP FORM SECTION -->
+    <section id="rsvp" class="py-24 px-6 max-w-3xl mx-auto">
+        <div class="bg-cardDark p-8 sm:p-12 rounded-sm border border-neutral-800 shadow-2xl relative">
+            
+            <div class="text-center mb-10">
+                <span class="text-xs uppercase tracking-[0.3em] text-neutral-400">Анкета гостя</span>
+                <h2 class="font-serif text-4xl sm:text-5xl text-white font-light mt-2">Подтверждение присутствия</h2>
+                <p class="text-xs text-neutral-400 mt-3 font-light">Пожалуйста, ответьте до 1 июня 2026 года</p>
+                <div class="w-12 h-px bg-white/30 mx-auto mt-4"></div>
+            </div>
+
+            <form id="rsvp-form" class="space-y-6">
+                
+                <!-- Name Input -->
+                <div>
+                    <label for="name" class="block text-xs uppercase tracking-widest text-neutral-300 mb-2">Ваше Имя и Фамилия *</label>
+                    <input type="text" id="name" required placeholder="Александр и Мария Ивановские" class="w-full bg-dark border border-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-white transition rounded-sm">
+                </div>
+
+                <!-- Attendance Radio -->
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-neutral-300 mb-3">Сможете ли вы прийти? *</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <label class="flex items-center gap-3 p-3 bg-dark border border-neutral-800 cursor-pointer hover:border-neutral-600 transition">
+                            <input type="radio" name="attendance" value="yes" checked class="accent-white">
+                            <span class="text-sm text-white font-light">С удовольствием приду</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 bg-dark border border-neutral-800 cursor-pointer hover:border-neutral-600 transition">
+                            <input type="radio" name="attendance" value="no" class="accent-white">
+                            <span class="text-sm text-neutral-400 font-light">К сожалению, не смогу</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Plus One -->
+                <div>
+                    <label for="plus-one" class="block text-xs uppercase tracking-widest text-neutral-300 mb-2">Будете ли вы с пары / со сопровождением?</label>
+                    <input type="text" id="plus-one" placeholder="Имя вашего спутника / спутницы" class="w-full bg-dark border border-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-white transition rounded-sm">
+                </div>
+
+                <!-- Preferences / Food -->
+                <div>
+                    <label for="diet" class="block text-xs uppercase tracking-widest text-neutral-300 mb-2">Пожелания по меню или напиткам</label>
+                    <textarea id="diet" rows="3" placeholder="Аллергии, вегетарианское меню, предпочтения по вину/крепкому алкоголю..." class="w-full bg-dark border border-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-white transition rounded-sm"></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="w-full bg-white text-black text-xs uppercase tracking-[0.2em] font-medium py-4 hover:bg-neutral-200 transition duration-300">
+                    Отправить ответ
+                </button>
+            </form>
+
+            <!-- Success Message Overlay -->
+            <div id="rsvp-success" class="hidden absolute inset-0 bg-cardDark flex flex-col items-center justify-center p-8 text-center border border-neutral-700 rounded-sm">
+                <i class="fa-regular fa-circle-check text-5xl text-white mb-4"></i>
+                <h3 class="font-serif text-3xl text-white mb-2">Ответ принят!</h3>
+                <p class="text-neutral-400 text-sm font-light max-w-sm mb-6">
+                    Благодарим за ваш ответ. Мы с нетерпением ждем встречи с вами 18 июля!
+                </p>
+                <button id="reset-rsvp-btn" class="text-xs uppercase tracking-widest text-neutral-400 hover:text-white border-b border-neutral-600 pb-1">
+                    Заполнить еще раз
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-12 border-t border-neutral-900 text-center text-xs text-neutral-500 space-y-4">
+        <h2 class="font-serif text-2xl text-white tracking-widest">V & M</h2>
+        <p class="font-light">Виктория & Максим — 18.07.2026</p>
+        <p class="text-[10px] text-neutral-600 uppercase tracking-widest">До встречи на торжестве</p>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- Countdown Timer Logic ---
+        const weddingDate = new Date('July 18, 2026 16:30:00').getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = weddingDate - now;
+
+            if (distance < 0) {
+                document.getElementById('days').innerText = '00';
+                document.getElementById('hours').innerText = '00';
+                document.getElementById('minutes').innerText = '00';
+                document.getElementById('seconds').innerText = '00';
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = String(days).padStart(2, '0');
+            document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+            document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // --- Mobile Menu Toggle ---
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // --- RSVP Form Handler ---
+        const rsvpForm = document.getElementById('rsvp-form');
+        const rsvpSuccess = document.getElementById('rsvp-success');
+        const resetRsvpBtn = document.getElementById('reset-rsvp-btn');
+
+        rsvpForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            rsvpSuccess.classList.remove('hidden');
+        });
+
+        resetRsvpBtn.addEventListener('click', () => {
+            rsvpForm.reset();
+            rsvpSuccess.classList.add('hidden');
+        });
+
+        // --- Song Suggestion Form Handler ---
+        const songForm = document.getElementById('song-form');
+        const songInput = document.getElementById('song-input');
+        const songSuccess = document.getElementById('song-success');
+
+        songForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if(songInput.value.trim() !== "") {
+                songSuccess.classList.remove('hidden');
+                songInput.value = '';
+                setTimeout(() => {
+                    songSuccess.classList.add('hidden');
+                }, 4000);
+            }
+        });
+    </script>
+</body>
+</html>
